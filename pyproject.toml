@@ -1,0 +1,102 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hermes"
+description = "A telegram bot to automate stuff"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Humberto Rocha", email = "humrochagf@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "aiogram~=3.1.1",
+  "pydantic",
+  "pydantic-settings",
+  "pytz",
+  "tinydb",
+  "typer",
+]
+dynamic = ["version"]
+
+[project.scripts]
+hermes = "hermes.__main__:app"
+
+[project.urls]
+Documentation = "https://github.com/humrochagf/hermes#readme"
+Issues = "https://github.com/humrochagf/hermes/issues"
+Source = "https://github.com/humrochagf/hermes"
+
+[tool.hatch.version]
+path = "hermes/__about__.py"
+
+[tool.hatch.envs.default]
+python = "3.11"
+dependencies = [
+  "black",
+  "flake8",
+  "isort",
+  "mypy",
+  "pytest",
+  "pytest-cov",
+]
+
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=hermes --cov=tests {args}"
+no-cov = "cov --no-cov {args}"
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+  "hermes/__about__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.black]
+exclude = """
+.env
+| .hatch
+| .mypy_cache
+| .venv
+| __pycache__
+| env
+| venv
+"""
+
+[tool.isort]
+profile = "black"
+skip = [
+  ".env",
+  ".hatch",
+  ".mypy_cache",
+  ".venv",
+  "__pycache__",
+  "env",
+  "venv",
+]
+
+[tool.mypy]
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_unused_ignores = true

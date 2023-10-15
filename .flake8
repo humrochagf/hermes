@@ -1,0 +1,11 @@
+[flake8]
+ignore = E203, E501, W503
+max_line_length = 88
+exclude =
+  .env
+  .hatch
+  .mypy_cache
+  .venv
+  __pycache__
+  env
+  venv

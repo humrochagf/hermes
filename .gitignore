@@ -1,0 +1,10 @@
+*.db
+*.egg
+*.egg-info
+*.env
+*.py[oc]
+.hatch/
+.mypy_cache/
+.venv/
+db/
+venv/
