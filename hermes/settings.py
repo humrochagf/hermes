@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     token: str = ""
     allowed_accounts: list[str | int] = []
     timezone: str = "America/Montreal"
+    welcome_image: str | None = None
     health_service_db: str = "db/health_data.json"
 
     model_config = SettingsConfigDict(
