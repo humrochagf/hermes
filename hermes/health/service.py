@@ -1,7 +1,7 @@
 from pydantic_core import to_jsonable_python
 from tinydb import Query, TinyDB
 
-from hermes.health.models import BloodPressure
+from .models import BloodPressure
 
 
 class HealthService:
