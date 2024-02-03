@@ -25,6 +25,7 @@ classifiers = [
 dependencies = [
   "aiogram",
   "aiotinydb",
+  "jinja2",
   "pytz",
   "uvicorn[standard]",
   "wheke",

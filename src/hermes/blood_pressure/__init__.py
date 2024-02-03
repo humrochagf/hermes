@@ -7,7 +7,7 @@ from hermes.blood_pressure.service import (
 from hermes.wheke import HermesPod
 
 blood_pressure_pod = HermesPod(
-    "bloodpressure",
+    "blood-pressure",
     services=[(BloodPressureService, blood_pressure_service_factory)],
     cli=cli,
     bot_router=bot_router,
