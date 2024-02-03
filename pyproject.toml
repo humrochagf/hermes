@@ -4,9 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hermes"
-description = "A telegram bot to automate stuff"
+dynamic = ["version"]
+description = "A telegram bot to automate health related stuff"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.8"
 license = "MIT"
 keywords = []
 authors = [
@@ -15,26 +16,22 @@ authors = [
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "aiogram~=3.1.1",
-  "pydantic",
-  "pydantic-settings",
+  "aiogram",
+  "aiotinydb",
   "pytz",
-  "tinydb",
-  "typer",
+  "uvicorn[standard]",
+  "wheke",
 ]
-dynamic = ["version"]
 
 [project.scripts]
-hermes = "hermes.__main__:app"
+hermes = "hermes.__main__:cli"
 
 [project.urls]
 Documentation = "https://github.com/humrochagf/hermes#readme"
@@ -42,51 +39,40 @@ Issues = "https://github.com/humrochagf/hermes/issues"
 Source = "https://github.com/humrochagf/hermes"
 
 [tool.hatch.version]
-path = "hermes/__about__.py"
+path = "src/hermes/__about__.py"
 
 [tool.hatch.envs.default]
-python = "3.11"
 dependencies = [
-  "black",
-  "flake8",
-  "isort",
+  "httpx",
   "mypy",
   "pytest",
   "pytest-cov",
+  "pytest-asyncio",
+  "ruff",
 ]
 
 [tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=hermes --cov=tests {args}"
-no-cov = "cov --no-cov {args}"
+cov = "pytest --cov"
+tests = "pytest {args:tests}"
+typing = "mypy --install-types --non-interactive {args:src/hermes tests}"
+lint = "ruff check {args:.}"
+fmt = "ruff format {args:.}"
 
-[tool.coverage.run]
-branch = true
-parallel = true
-omit = [
-  "hermes/__about__.py",
+[tool.hatch.envs.docs]
+dependencies = [
+  "mkdocs-material",
+  "mkdocstrings[python]",
 ]
 
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+[tool.hatch.envs.docs.scripts]
+build = "mkdocs build"
+server = "mkdocs serve"
 
-[tool.black]
-exclude = """
-.env
-| .hatch
-| .mypy_cache
-| .venv
-| __pycache__
-| env
-| venv
-"""
+[[tool.hatch.envs.all.matrix]]
+python = ["3.10", "3.11", "3.12"]
 
-[tool.isort]
-profile = "black"
-skip = [
+[tool.ruff]
+exclude = [
   ".env",
   ".hatch",
   ".mypy_cache",
@@ -96,7 +82,91 @@ skip = [
   "venv",
 ]
 
+[tool.ruff.lint]
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Same line string implicit string concatenation
+  "ISC001",
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105", "S106", "S107",
+  # Ignore complexity
+  "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["hermes"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.coverage.run]
+source_pkgs = ["hermes", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/hermes/__about__.py",
+]
+
+[tool.coverage.paths]
+hermes = ["src/hermes", "*/hermes/src/hermes"]
+tests = ["tests", "*/hermes/tests"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
 [tool.mypy]
 disallow_incomplete_defs = true
 check_untyped_defs = true
 warn_unused_ignores = true
+exclude = """
+  .env
+  | .hatch
+  | .mypy_cache
+  | .venv
+  | __pycache__
+  | env
+  | venv
+"""

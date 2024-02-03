@@ -3,6 +3,7 @@
 *.egg-info
 *.env
 *.py[oc]
+.coverage
 .hatch/
 .mypy_cache/
 .venv/

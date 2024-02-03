@@ -1,7 +1,10 @@
 from pathlib import Path
 
-from hermes.health.models import BloodPressure
-from hermes.health.service import HealthService
+import pytest
+
+from hermes.blood_pressure.models import BloodPressure
+from hermes.blood_pressure.repository import BloodPressureRepository
+from hermes.blood_pressure.service import BloodPressureService
 
 
 def test_parse_blood_pressure() -> None:
@@ -29,20 +32,23 @@ def test_parse_blood_pressure() -> None:
     assert blood_pressure.notes == "Multi line\nnotes"
 
 
-def test_health_service(tmp_path: Path) -> None:
-    service = HealthService(str(tmp_path / "testdb.json"))
+@pytest.mark.asyncio
+async def test_health_service(tmp_path: Path) -> None:
+    service = BloodPressureService(
+        BloodPressureRepository(str(tmp_path / "testdb.json"))
+    )
     blood_pressure = BloodPressure.from_str("120/80 65")
 
     assert blood_pressure
 
     blood_pressure.username = "testuser"
 
-    service.save_blood_pressure(blood_pressure)
+    await service.save_blood_pressure(blood_pressure)
 
-    blood_pressures = service.list_blood_pressures("testuser")
+    blood_pressures = await service.list_blood_pressures("testuser")
 
     assert len(blood_pressures) == 1
 
-    blood_pressures = service.list_blood_pressures("otheruser")
+    blood_pressures = await service.list_blood_pressures("otheruser")
 
     assert len(blood_pressures) == 0
