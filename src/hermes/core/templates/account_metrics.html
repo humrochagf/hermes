@@ -11,9 +11,23 @@
     {% for bp in blood_pressures %}
       <tr>
         <td class="p-2 b b-solid b-slate-500">{{ bp.measured_at | to_local_time }}</td>
-        <td class="p-2 b b-solid b-slate-500 {% if bp.systolic > 130 or bp.diastolic > 90 %}color-yellow{% endif %}">{{ bp.systolic }}/{{ bp.diastolic }}</td>
+        <td class="p-2 b b-solid b-slate-500 color-{{ bp.level | level_to_color }}">{{ bp.systolic }}/{{ bp.diastolic }}</td>
         <td class="p-2 b b-solid b-slate-500">{{ bp.heart_rate }}</td>
       </tr>
     {% endfor %}
+
+    <caption class="caption-bottom">
+      <b>Legend:</b>
+      <span class="color-blue">low</span>
+      - <span class="color-black">normal</span>
+      - <span class="color-orange">high</span>
+      - <span class="color-red">danger</span>
+    </caption>
   </table>
+
+  <br>
+
+  <div class="text-center">
+    <a href="{{ url_for('index') }}"><< Back</a>
+  </div>
 {% endblock %}
