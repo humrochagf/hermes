@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
-{% block body %}
-<div class="">
-  <h1 class="text-center">Hello World</h1>
-</div>
+{% block main %}
+  <p><b>Available accounts:</b></p>
+
+  {% for account in accounts %}
+    <p><a href="{{ url_for('account_metrics', account=account) }}" >{{ account }}</a></p>
+  {% endfor %}
 {% endblock %}

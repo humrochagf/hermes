@@ -2,14 +2,22 @@
 <html lang="en">
 
 <head>
-  <title>{% block title %}{% endblock %}</title>
+  <title>{% block title %}Hermes{% if page_title %} - {{ page_title }}{% endif %}{% endblock %}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="{{ url_for('core_static', path='styles.css') }}" rel="stylesheet">
 </head>
 
-<body class="flex justify-around">
+<body class="flex flex-col items-center">
   {% block body %}
+    <header>
+      <h1 class="text-center">{{ page_title }}</h1>
+    </header>
+
+    <main>
+      {% block main %}
+      {% endblock %}
+    </main>
   {% endblock %}
 </body>
 

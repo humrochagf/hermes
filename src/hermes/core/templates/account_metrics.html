@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <table class="text-center table-auto border-collapse b b-solid b-slate-500">
+    <tr>
+      <th class="p-2 b b-solid b-slate-500">Date</th>
+      <th class="p-2 b b-solid b-slate-500">Blood Pressure</th>
+      <th class="p-2 b b-solid b-slate-500">Heart Rate</th>
+    </tr>
+
+    {% for bp in blood_pressures %}
+      <tr>
+        <td class="p-2 b b-solid b-slate-500">{{ bp.measured_at | to_local_time }}</td>
+        <td class="p-2 b b-solid b-slate-500 {% if bp.systolic > 130 or bp.diastolic > 90 %}color-yellow{% endif %}">{{ bp.systolic }}/{{ bp.diastolic }}</td>
+        <td class="p-2 b b-solid b-slate-500">{{ bp.heart_rate }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
