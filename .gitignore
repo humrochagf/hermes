@@ -9,6 +9,7 @@
 .mypy_cache/
 .venv/
 db/
+dist/
 node_modules/
 src/hermes/core/static/
 venv/
