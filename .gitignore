@@ -10,6 +10,5 @@
 .venv/
 db/
 node_modules/
-pnpm-lock.yaml
 src/hermes/core/static/
 venv/
