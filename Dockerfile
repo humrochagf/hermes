@@ -1,6 +1,21 @@
-FROM python:3.11-bullseye
+FROM node:lts as frontend
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
 
 COPY . /hermes
+
+WORKDIR /hermes
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+RUN pnpm build
+
+FROM python:3.12
+
+COPY --from=frontend /hermes /hermes
 
 WORKDIR /hermes
 
