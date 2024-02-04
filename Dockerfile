@@ -20,3 +20,7 @@ COPY --from=frontend /hermes /hermes
 WORKDIR /hermes
 
 RUN pip install .
+
+EXPOSE 8000
+
+ENTRYPOINT ["uvicorn", "hermes:app", "--workers 3"]
