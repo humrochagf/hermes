@@ -23,4 +23,4 @@ RUN pip install .
 
 EXPOSE 8000
 
-ENTRYPOINT ["uvicorn", "hermes:app", "--host", "0.0.0.0", "--workers", "3", "--proxy-headers"]
+ENTRYPOINT ["uvicorn", "hermes:app", "--host", "0.0.0.0", "--workers", "3", "--proxy-headers", "--forwarded-allow-ips=*"]
