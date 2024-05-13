@@ -1,5 +1,5 @@
-from hermes.blood_pressure import blood_pressure_pod
-from hermes.core import core_pod
+from hermes.blood_pressure.pod import blood_pressure_pod
+from hermes.core.pod import core_pod
 from hermes.wheke import Hermes
 
 hermes = Hermes()

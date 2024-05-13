@@ -7,6 +7,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 from hermes.settings import settings
+from hermes.core.helpers import utcnow
 
 BP_RE = re.compile(
     r"(?P<systolic>\d{1,3})/(?P<diastolic>\d{1,3})"
@@ -30,7 +31,7 @@ class BloodPressure(BaseModel):
     diastolic: int
     heart_rate: int
     notes: str = ""
-    measured_at: datetime = Field(default_factory=datetime.utcnow)
+    measured_at: datetime = Field(default_factory=utcnow)
 
     @property
     def level(self) -> BloodLevel:

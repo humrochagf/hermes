@@ -28,4 +28,4 @@ class BloodPressureRepository:
                 BloodPressure(**d) for d in db.search(Query().username == username)
             )
 
-        return sorted(bp_list, key=lambda k: k.measured_at)
+        return sorted(bp_list, key=lambda k: k.measured_at, reverse=True)
