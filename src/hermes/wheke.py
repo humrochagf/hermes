@@ -5,8 +5,7 @@ from aiogram import Bot, Dispatcher, Router
 from aiogram.types import Message
 from fastapi import APIRouter
 from typer import Typer
-from wheke import Pod, Wheke
-from wheke.pod import ServiceList
+from wheke import Pod, ServiceList, Wheke
 
 from hermes.settings import settings
 

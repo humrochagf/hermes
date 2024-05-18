@@ -6,8 +6,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from hermes.settings import settings
 from hermes.core.helpers import utcnow
+from hermes.settings import settings
 
 BP_RE = re.compile(
     r"(?P<systolic>\d{1,3})/(?P<diastolic>\d{1,3})"
