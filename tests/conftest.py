@@ -6,11 +6,12 @@ from fastapi.testclient import TestClient
 from typer import Typer
 
 from hermes import hermes
-from hermes.settings import settings
+from hermes.settings import get_hermes_settings
 
 
 @pytest.fixture
 def client(tmp_path: Path) -> Generator[TestClient, None, None]:
+    settings = get_hermes_settings()
     previous_db_path = settings.blood_pressure_db
     settings.blood_pressure_db = str(tmp_path / "blood-pressure.db")
 
@@ -21,6 +22,7 @@ def client(tmp_path: Path) -> Generator[TestClient, None, None]:
 
 @pytest.fixture
 def cli(tmp_path: Path) -> Generator[Typer, None, None]:
+    settings = get_hermes_settings()
     previous_db_path = settings.blood_pressure_db
     settings.blood_pressure_db = str(tmp_path / "blood-pressure.db")
 

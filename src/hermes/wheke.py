@@ -7,7 +7,7 @@ from fastapi import APIRouter
 from typer import Typer
 from wheke import Pod, ServiceList, Wheke
 
-from hermes.settings import settings
+from hermes.settings import HermesSettings, get_hermes_settings
 
 dispatcher = Dispatcher()
 
@@ -19,6 +19,7 @@ async def allowed_accounts_middleware(
     data: dict[str, Any],
 ) -> Any:
     user = data["event_from_user"]
+    settings = get_hermes_settings()
 
     if (
         user.id in settings.bot_allowed_accounts
@@ -60,11 +61,14 @@ class Hermes(Wheke):
     Entry point for Hermes.
     """
 
+    def __init__(self) -> None:
+        super().__init__(HermesSettings)
+
     def create_bot(self) -> tuple[Bot, Dispatcher]:
         """
         Create a Telegram bot with all plugged pods.
         """
-        bot = Bot(settings.bot_token, parse_mode="HTML")
+        bot = Bot(get_hermes_settings().bot_token, parse_mode="HTML")
 
         for pod in self.pods:
             if isinstance(pod, HermesPod) and pod.bot_router:

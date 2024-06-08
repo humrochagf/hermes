@@ -1,12 +1,14 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
+from pydantic_settings import SettingsConfigDict
+from wheke import WhekeSettings, get_settings
 
 
-class Settings(BaseSettings):
+class HermesSettings(WhekeSettings):
     welcome_image: str | None = None
     timezone: str = "America/Montreal"
 
     bot_token: str = ""
-    bot_allowed_accounts: list[str | int] = []
+    bot_allowed_accounts: list[str | int] = Field(default_factory=list)
 
     blood_pressure_db: str = "db/blood_pressure.json"
     blood_pressure_low: tuple[int, int] = (90, 60)
@@ -18,4 +20,5 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+def get_hermes_settings() -> HermesSettings:
+    return get_settings(HermesSettings)

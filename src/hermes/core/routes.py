@@ -11,7 +11,7 @@ from hermes.blood_pressure.service import (
     get_blood_pressure_service,
 )
 from hermes.core.helpers import to_local_time
-from hermes.settings import settings
+from hermes.settings import get_hermes_settings
 
 router = APIRouter(tags=["core"], include_in_schema=False)
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
@@ -27,7 +27,7 @@ async def index(request: Request) -> HTMLResponse:
         request=request,
         context={
             "page_title": "Home",
-            "accounts": settings.bot_allowed_accounts,
+            "accounts": get_hermes_settings().bot_allowed_accounts,
         },
     )
 

@@ -2,7 +2,7 @@ from wheke import get_service
 
 from hermes.blood_pressure.models import BloodPressure
 from hermes.blood_pressure.repository import BloodPressureRepository
-from hermes.settings import settings
+from hermes.settings import get_hermes_settings
 
 
 class BloodPressureService:
@@ -19,7 +19,9 @@ class BloodPressureService:
 
 
 def blood_pressure_service_factory() -> BloodPressureService:
-    return BloodPressureService(BloodPressureRepository(settings.blood_pressure_db))
+    return BloodPressureService(
+        BloodPressureRepository(get_hermes_settings().blood_pressure_db)
+    )
 
 
 def get_blood_pressure_service() -> BloodPressureService:

@@ -7,15 +7,12 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 from hermes.core.helpers import utcnow
-from hermes.settings import settings
+from hermes.settings import get_hermes_settings
 
 BP_RE = re.compile(
     r"(?P<systolic>\d{1,3})/(?P<diastolic>\d{1,3})"
     r"\s(?P<heart_rate>\d{1,3})\s*(?P<notes>[\w\W]*)"
 )
-BP_LOW_S, BP_LOW_D = settings.blood_pressure_low
-BP_HIGH_S, BP_HIGH_D = settings.blood_pressure_high
-BP_DANGER_S, BP_DANGER_D = settings.blood_pressure_danger
 
 
 class BloodLevel(str, Enum):
@@ -41,11 +38,15 @@ class BloodPressure(BaseModel):
 
         Please consult your physician for medical advice.
         """
-        if self.systolic >= BP_DANGER_S or self.diastolic >= BP_DANGER_D:
+        bp_danger_s, bp_danger_d = get_hermes_settings().blood_pressure_danger
+        bp_high_s, bp_high_d = get_hermes_settings().blood_pressure_danger
+        bp_low_s, bp_low_d = get_hermes_settings().blood_pressure_danger
+
+        if self.systolic >= bp_danger_s or self.diastolic >= bp_danger_d:
             return BloodLevel.danger
-        elif self.systolic >= BP_HIGH_S or self.diastolic >= BP_HIGH_D:
+        elif self.systolic >= bp_high_s or self.diastolic >= bp_high_d:
             return BloodLevel.high
-        elif self.systolic <= BP_LOW_S or self.diastolic <= BP_LOW_D:
+        elif self.systolic <= bp_low_s or self.diastolic <= bp_low_d:
             return BloodLevel.low
 
         return BloodLevel.normal

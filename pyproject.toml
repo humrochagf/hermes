@@ -158,6 +158,18 @@ exclude_lines = [
   "if TYPE_CHECKING:",
 ]
 
+[tool.isort]
+profile = "black"
+skip = [
+  ".env",
+  ".hatch",
+  ".mypy_cache",
+  ".venv",
+  "__pycache__",
+  "env",
+  "venv",
+]
+
 [tool.mypy]
 disallow_incomplete_defs = true
 check_untyped_defs = true

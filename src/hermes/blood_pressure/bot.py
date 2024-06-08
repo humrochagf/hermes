@@ -7,7 +7,7 @@ from aiogram.types import FSInputFile, Message
 
 from hermes.blood_pressure.models import BP_RE, BloodPressure
 from hermes.blood_pressure.service import get_blood_pressure_service
-from hermes.settings import settings
+from hermes.settings import get_hermes_settings
 
 bot_router = Router()
 
@@ -20,6 +20,8 @@ async def command_start_handler(message: Message) -> None:
     This handler receive messages with `/start` command
     """
     global welcome_image_id  # noqa
+
+    settings = get_hermes_settings()
 
     if welcome_image_id:
         await message.answer_photo(welcome_image_id)
@@ -53,7 +55,7 @@ async def list_blood_preassures(message: Message) -> None:
     """
     This handler lists previously saved blood pressure measurements.
     """
-    tz = pytz.timezone(settings.timezone)
+    tz = pytz.timezone(get_hermes_settings().timezone)
     username = ""
     measurements = []
 
