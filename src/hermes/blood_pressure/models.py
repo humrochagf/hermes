@@ -39,8 +39,8 @@ class BloodPressure(BaseModel):
         Please consult your physician for medical advice.
         """
         bp_danger_s, bp_danger_d = get_hermes_settings().blood_pressure_danger
-        bp_high_s, bp_high_d = get_hermes_settings().blood_pressure_danger
-        bp_low_s, bp_low_d = get_hermes_settings().blood_pressure_danger
+        bp_high_s, bp_high_d = get_hermes_settings().blood_pressure_high
+        bp_low_s, bp_low_d = get_hermes_settings().blood_pressure_low
 
         if self.systolic >= bp_danger_s or self.diastolic >= bp_danger_d:
             return BloodLevel.danger
