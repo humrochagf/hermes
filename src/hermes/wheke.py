@@ -2,6 +2,8 @@ from pathlib import Path
 from typing import Any, Awaitable, Callable
 
 from aiogram import Bot, Dispatcher, Router
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.types import Message
 from fastapi import APIRouter
 from typer import Typer
@@ -68,7 +70,10 @@ class Hermes(Wheke):
         """
         Create a Telegram bot with all plugged pods.
         """
-        bot = Bot(get_hermes_settings().bot_token, parse_mode="HTML")
+        bot = Bot(
+            get_hermes_settings().bot_token,
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+        )
 
         for pod in self.pods:
             if isinstance(pod, HermesPod) and pod.bot_router:
