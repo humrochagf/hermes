@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, Awaitable, Callable
 
@@ -7,7 +8,7 @@ from aiogram.enums import ParseMode
 from aiogram.types import Message
 from fastapi import APIRouter
 from typer import Typer
-from wheke import Pod, ServiceList, Wheke
+from wheke import Pod, ServiceConfig, Wheke
 
 from hermes.settings import HermesSettings, get_hermes_settings
 
@@ -42,7 +43,7 @@ class HermesPod(Pod):
         router: APIRouter | None = None,
         static_url: str | None = None,
         static_path: str | Path | None = None,
-        services: ServiceList | None = None,
+        services: Iterable[ServiceConfig] | None = None,
         cli: Typer | None = None,
         bot_router: Router | None = None,
     ) -> None:
