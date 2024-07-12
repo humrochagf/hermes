@@ -1,4 +1,4 @@
-FROM node:lts as frontend
+FROM node:lts AS frontend
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
