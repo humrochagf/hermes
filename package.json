@@ -4,8 +4,8 @@
     "build": "postcss src/hermes/core/static_src/styles.css -o src/hermes/core/static/styles.css"
   },
   "devDependencies": {
-    "unocss": "^0.58.4",
-    "postcss-cli": "^11.0.0",
-    "@unocss/postcss": "^0.58.4"
+    "unocss": "latest",
+    "postcss-cli": "latest",
+    "@unocss/postcss": "latest"
   }
 }

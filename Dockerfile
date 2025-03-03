@@ -1,19 +1,12 @@
-FROM node:lts AS frontend
-
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-
-RUN corepack enable
+FROM oven/bun:1 AS frontend
 
 COPY . /hermes
 
 WORKDIR /hermes
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN bun install && bun run build
 
-RUN pnpm build
-
-FROM python:3.12
+FROM python:3.13
 
 COPY --from=frontend /hermes /hermes
 
