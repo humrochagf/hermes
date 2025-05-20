@@ -5,7 +5,7 @@ from aiotinydb.database import AIOTinyDB
 from pydantic_core import to_jsonable_python
 from tinydb import Query
 
-from hermes.blood_pressure.models import BloodPressure
+from .models import BloodPressure
 
 
 class BloodPressureRepository:

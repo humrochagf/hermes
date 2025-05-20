@@ -4,20 +4,23 @@ from datetime import datetime
 import pytz
 import typer
 from rich.console import Console
+from typer import Context
+from wheke import get_container
 
-from hermes.blood_pressure.models import BloodPressure
-from hermes.blood_pressure.service import get_blood_pressure_service
-from hermes.settings import get_hermes_settings
+from ..settings import settings
+from .models import BloodPressure
+from .service import get_blood_pressure_service
 
 cli = typer.Typer(short_help="Blood Pressure commands")
 console = Console()
 
 
 @cli.command()
-def add(measurement: str, username: str, measured_at: str) -> None:
+def add(ctx: Context, measurement: str, username: str, measured_at: str) -> None:
     console.print("Adding blood pressure measurement...")
+    container = get_container(ctx)
 
-    health_service = get_blood_pressure_service()
+    health_service = get_blood_pressure_service(container)
     blood_pressure = BloodPressure.from_str(measurement)
 
     if blood_pressure:
@@ -26,7 +29,7 @@ def add(measurement: str, username: str, measured_at: str) -> None:
         if measured_at:
             measured_at_dt = (
                 datetime.strptime(measured_at, "%Y-%m-%d %H:%M")
-                .replace(tzinfo=pytz.timezone(get_hermes_settings().timezone))
+                .replace(tzinfo=pytz.timezone(settings.timezone))
                 .astimezone(pytz.UTC)
             )
 

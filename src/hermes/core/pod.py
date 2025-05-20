@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from hermes.core.routes import router
-from hermes.wheke import HermesPod
+from ..wheke import HermesPod
+from .routes import router
 
 core_pod = HermesPod(
     "core",

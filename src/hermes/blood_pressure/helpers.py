@@ -1,4 +1,4 @@
-from hermes.blood_pressure.models import BloodLevel
+from .models import BloodLevel
 
 
 def level_to_color(value: BloodLevel) -> str:

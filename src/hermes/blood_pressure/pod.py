@@ -1,12 +1,12 @@
 from wheke import ServiceConfig
 
-from hermes.blood_pressure.bot import bot_router
-from hermes.blood_pressure.cli import cli
-from hermes.blood_pressure.service import (
+from ..wheke import HermesPod
+from .bot import bot_router
+from .cli import cli
+from .service import (
     BloodPressureService,
     blood_pressure_service_factory,
 )
-from hermes.wheke import HermesPod
 
 blood_pressure_pod = HermesPod(
     "blood-pressure",

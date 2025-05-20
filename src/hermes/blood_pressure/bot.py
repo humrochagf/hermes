@@ -1,13 +1,17 @@
 from pathlib import Path
+from typing import Any
 
 import pytz
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import FSInputFile, Message
+from svcs import Container
 
-from hermes.blood_pressure.models import BP_RE, BloodPressure
-from hermes.blood_pressure.service import get_blood_pressure_service
-from hermes.settings import get_hermes_settings
+from hermes.wheke import KEY_REGISTRY
+
+from ..settings import settings
+from .models import BP_RE, BloodPressure
+from .service import get_blood_pressure_service
 
 bot_router = Router()
 
@@ -20,8 +24,6 @@ async def command_start_handler(message: Message) -> None:
     This handler receive messages with `/start` command
     """
     global welcome_image_id  # noqa
-
-    settings = get_hermes_settings()
 
     if welcome_image_id:
         await message.answer_photo(welcome_image_id)
@@ -36,33 +38,39 @@ async def command_start_handler(message: Message) -> None:
 
 
 @bot_router.message(F.text.regexp(BP_RE))
-async def save_blood_pressure(message: Message) -> None:
+async def save_blood_pressure(message: Message, data: dict[str, Any]) -> None:
     """
     Handler to record a blood pressure measurement.
     """
+    with Container(data[KEY_REGISTRY]) as container:
+        service = get_blood_pressure_service(container)
+
     blood_pressure = BloodPressure.from_str(message.text or "")
 
     if message.from_user and blood_pressure:
         blood_pressure.username = message.from_user.username
 
-        await get_blood_pressure_service().save_blood_pressure(blood_pressure)
+        await service.save_blood_pressure(blood_pressure)
 
         await message.answer("Blood pressure recorded with success!")
 
 
 @bot_router.message(Command(commands=["bp"]))
-async def list_blood_preassures(message: Message) -> None:
+async def list_blood_preassures(message: Message, data: dict[str, Any]) -> None:
     """
     This handler lists previously saved blood pressure measurements.
     """
-    tz = pytz.timezone(get_hermes_settings().timezone)
+    with Container(data[KEY_REGISTRY]) as container:
+        service = get_blood_pressure_service(container)
+
+    tz = pytz.timezone(settings.timezone)
     username = ""
     measurements = []
 
     if message.from_user:
         username = message.from_user.username or ""
 
-    for bp in await get_blood_pressure_service().list_blood_pressures(username):
+    for bp in await service.list_blood_pressures(username):
         measured_at = bp.measured_at.replace(tzinfo=pytz.UTC).astimezone(tz)
 
         measurements.append(

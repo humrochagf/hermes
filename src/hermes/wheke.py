@@ -7,10 +7,14 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import Message
 from fastapi import APIRouter
+from svcs import Registry
 from typer import Typer
 from wheke import Pod, ServiceConfig, Wheke
+from wheke import _constants as wheke_constants
 
-from hermes.settings import HermesSettings, get_hermes_settings
+from .settings import settings
+
+KEY_REGISTRY = wheke_constants.KEY_REGISTRY
 
 dispatcher = Dispatcher()
 
@@ -22,7 +26,6 @@ async def allowed_accounts_middleware(
     data: dict[str, Any],
 ) -> Any:
     user = data["event_from_user"]
-    settings = get_hermes_settings()
 
     if (
         user.id in settings.bot_allowed_accounts
@@ -65,14 +68,18 @@ class Hermes(Wheke):
     """
 
     def __init__(self) -> None:
-        super().__init__(HermesSettings)
+        super().__init__(settings)
 
     def create_bot(self) -> tuple[Bot, Dispatcher]:
         """
         Create a Telegram bot with all plugged pods.
         """
+        registry = Registry()
+        self.setup_registry(registry)
+        dispatcher[KEY_REGISTRY] = registry
+
         bot = Bot(
-            get_hermes_settings().bot_token,
+            settings.bot_token,
             default=DefaultBotProperties(parse_mode=ParseMode.HTML),
         )
 

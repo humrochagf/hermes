@@ -1,6 +1,6 @@
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
-from wheke import WhekeSettings, get_settings
+from wheke import WhekeSettings
 
 
 class HermesSettings(WhekeSettings):
@@ -20,5 +20,4 @@ class HermesSettings(WhekeSettings):
     )
 
 
-def get_hermes_settings() -> HermesSettings:
-    return get_settings(HermesSettings)
+settings = HermesSettings()

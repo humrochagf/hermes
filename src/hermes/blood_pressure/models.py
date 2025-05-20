@@ -6,8 +6,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from hermes.core.helpers import utcnow
-from hermes.settings import get_hermes_settings
+from ..core.helpers import utcnow
+from ..settings import settings
 
 BP_RE = re.compile(
     r"(?P<systolic>\d{1,3})/(?P<diastolic>\d{1,3})"
@@ -38,9 +38,9 @@ class BloodPressure(BaseModel):
 
         Please consult your physician for medical advice.
         """
-        bp_danger_s, bp_danger_d = get_hermes_settings().blood_pressure_danger
-        bp_high_s, bp_high_d = get_hermes_settings().blood_pressure_high
-        bp_low_s, bp_low_d = get_hermes_settings().blood_pressure_low
+        bp_danger_s, bp_danger_d = settings.blood_pressure_danger
+        bp_high_s, bp_high_d = settings.blood_pressure_high
+        bp_low_s, bp_low_d = settings.blood_pressure_low
 
         if self.systolic >= bp_danger_s or self.diastolic >= bp_danger_d:
             return BloodLevel.danger

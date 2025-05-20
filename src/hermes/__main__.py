@@ -2,15 +2,15 @@ import asyncio
 
 from rich.console import Console
 
-from hermes import hermes
+from . import build_bot, build_cli
 
 console = Console()
-cli = hermes.create_cli()
+cli = build_cli()
 
 
 @cli.command(short_help="Start Telegram bot")
 def start_bot() -> None:
-    bot, dispatcher = hermes.create_bot()
+    bot, dispatcher = build_bot()
 
     console.print("Starting Hermes...")
 

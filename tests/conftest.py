@@ -5,27 +5,20 @@ import pytest
 from fastapi.testclient import TestClient
 from typer import Typer
 
-from hermes import hermes
-from hermes.settings import get_hermes_settings
+from hermes import build_app, build_cli
+from hermes.settings import settings
 
 
 @pytest.fixture
 def client(tmp_path: Path) -> Generator[TestClient]:
-    settings = get_hermes_settings()
-    previous_db_path = settings.blood_pressure_db
     settings.blood_pressure_db = str(tmp_path / "blood-pressure.db")
 
-    yield TestClient(hermes.create_app())
-
-    settings.blood_pressure_db = previous_db_path
+    with TestClient(build_app()) as client:
+        yield client
 
 
 @pytest.fixture
-def cli(tmp_path: Path) -> Generator[Typer]:
-    settings = get_hermes_settings()
-    previous_db_path = settings.blood_pressure_db
+def cli(tmp_path: Path) -> Typer:
     settings.blood_pressure_db = str(tmp_path / "blood-pressure.db")
 
-    yield hermes.create_cli()
-
-    settings.blood_pressure_db = previous_db_path
+    return build_cli()

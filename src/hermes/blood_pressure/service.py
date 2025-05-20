@@ -1,8 +1,13 @@
+from typing import Annotated
+
+from fastapi import Depends
+from svcs import Container
+from svcs.fastapi import DepContainer
 from wheke import get_service
 
-from hermes.blood_pressure.models import BloodPressure
-from hermes.blood_pressure.repository import BloodPressureRepository
-from hermes.settings import get_hermes_settings
+from ..settings import settings
+from .models import BloodPressure
+from .repository import BloodPressureRepository
 
 
 class BloodPressureService:
@@ -18,11 +23,18 @@ class BloodPressureService:
         return await self.repository.list_blood_pressures(username)
 
 
-def blood_pressure_service_factory() -> BloodPressureService:
-    return BloodPressureService(
-        BloodPressureRepository(get_hermes_settings().blood_pressure_db)
-    )
+def blood_pressure_service_factory(_: Container) -> BloodPressureService:
+    return BloodPressureService(BloodPressureRepository(settings.blood_pressure_db))
 
 
-def get_blood_pressure_service() -> BloodPressureService:
-    return get_service(BloodPressureService)
+def get_blood_pressure_service(container: Container) -> BloodPressureService:
+    return get_service(container, BloodPressureService)
+
+
+def _blood_pressure_service_injection(container: DepContainer) -> BloodPressureService:
+    return get_blood_pressure_service(container)
+
+
+BloodPressureServiceInjection = Annotated[
+    BloodPressureService, Depends(_blood_pressure_service_injection)
+]
