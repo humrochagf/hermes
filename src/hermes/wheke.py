@@ -10,11 +10,8 @@ from fastapi import APIRouter
 from svcs import Registry
 from typer import Typer
 from wheke import Pod, ServiceConfig, Wheke
-from wheke import _constants as wheke_constants
 
 from .settings import settings
-
-KEY_REGISTRY = wheke_constants.KEY_REGISTRY
 
 dispatcher = Dispatcher()
 
@@ -76,7 +73,7 @@ class Hermes(Wheke):
         """
         registry = Registry()
         self.setup_registry(registry)
-        dispatcher[KEY_REGISTRY] = registry
+        settings.add_registry(registry)
 
         bot = Bot(
             settings.bot_token,

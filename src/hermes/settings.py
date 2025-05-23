@@ -1,5 +1,9 @@
+from collections.abc import Generator
+from contextlib import contextmanager
+
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
+from svcs import Container, Registry
 from wheke import WhekeSettings
 
 
@@ -18,6 +22,20 @@ class HermesSettings(WhekeSettings):
     model_config = SettingsConfigDict(
         env_prefix="hermes_", env_file=".env", env_file_encoding="utf-8"
     )
+
+    _registry: Registry | None = None
+
+    def add_registry(self, registry: Registry) -> None:
+        self._registry = registry
+
+    @contextmanager
+    def get_container(self) -> Generator[Container]:
+        if not self._registry:
+            message = "Can't retrieve container without registry"
+            raise Exception(message)
+
+        with Container(self._registry) as container:
+            yield container
 
 
 settings = HermesSettings()

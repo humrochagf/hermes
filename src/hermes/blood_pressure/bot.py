@@ -1,13 +1,9 @@
 from pathlib import Path
-from typing import Any
 
 import pytz
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import FSInputFile, Message
-from svcs import Container
-
-from hermes.wheke import KEY_REGISTRY
 
 from ..settings import settings
 from .models import BP_RE, BloodPressure
@@ -38,11 +34,11 @@ async def command_start_handler(message: Message) -> None:
 
 
 @bot_router.message(F.text.regexp(BP_RE))
-async def save_blood_pressure(message: Message, data: dict[str, Any]) -> None:
+async def save_blood_pressure(message: Message) -> None:
     """
     Handler to record a blood pressure measurement.
     """
-    with Container(data[KEY_REGISTRY]) as container:
+    with settings.get_container() as container:
         service = get_blood_pressure_service(container)
 
     blood_pressure = BloodPressure.from_str(message.text or "")
@@ -56,11 +52,11 @@ async def save_blood_pressure(message: Message, data: dict[str, Any]) -> None:
 
 
 @bot_router.message(Command(commands=["bp"]))
-async def list_blood_preassures(message: Message, data: dict[str, Any]) -> None:
+async def list_blood_preassures(message: Message) -> None:
     """
     This handler lists previously saved blood pressure measurements.
     """
-    with Container(data[KEY_REGISTRY]) as container:
+    with settings.get_container() as container:
         service = get_blood_pressure_service(container)
 
     tz = pytz.timezone(settings.timezone)
